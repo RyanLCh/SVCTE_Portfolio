@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        22 October 2020
+        Transparent Circles
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Circle Sliders</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: #bad;
+        }
+        div#userinput, div#casestudy {
+            background-color: #ffe4c4;
+            width: 600px;
+            margin: 1em auto;
+            padding: 1em 0;
+            border-radius: 20px;
+            font-size: 1.1em;
+        }
+        div#userinput label {
+            width: 10em;
+            text-align: right;
+            display: inline-block;
+        }
+        div#userinput input { 
+            width: 300px;
+            position: relative;
+            top: 6px;
+            margin: 5px;
+        }
+        div#userinput span {
+            width: 2em;
+            text-align: right;
+            display: inline-block;
+        }
+        div#casestudy {
+            background-color: #ffe4c4;
+            padding: 1em 3em;
+            border-radius: 20px;
+            width: 500px;
+            font-size: 1em;
+        }
+        footer {
+            color: #547;
+        }
+
+    </style>
+    <script type='text/javascript' src='navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Transparent Circles</h1>
+    <!-- page content will go here -->
+    
+    <svg width='600' height='400' viewBox='0 0 600 400'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+        <!-- the clipping paths and masks will go here -->
+
+        <defs>
+        </defs>
+
+        <!-- the shapes and stuff will go here -->
+
+        <rect x='0' y='0' width='600' height='400' fill='#fff8e7'/>
+        
+        <g id='circles'>
+        </g>
+
+    </svg>
+    
+    <div id='userinput'>
+        <p>
+            <label>Opacity:  </label>
+            <input type='range' id='opacity' />
+            <span id='opacityreadout'>50</span>
+        </p>
+        <p>
+            <label>Maximum radius: </label>
+            <input type='range' id='maxradius' value='200' min='10' max='300' />
+            <span id='maxradiusreadout'>200</span>
+        </p>
+        <p>
+            <label>Number of circles: </label>
+            <input type='range' id='numcircles' value='100' min='5' max='500' />
+            <span id='numcirclesreadout'>100</span>
+        </p>
+    </div>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Display randomly sized and colored circles using SVG and JavaScript.
+        </p>
+        <p>
+            <b>Problem:</b> It was uninteractive, and you needed to refresh the page to randomize the circles.
+        </p>
+        <p>
+            <b>Solution:</b> We added sliders to increase interactivity and the amount of options for more interesting layouts.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='index.html' id='back'>
+            <img src='naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='index.html'>
+            <img src='naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='index.html' id='next'>
+            <img src='naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        //utility function
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        //global variables
+        var numCircles = 100;
+        var opacity = 0.5;
+        var maxRadius = 200;
+        
+        //setup
+        get('opacity').oninput = redraw;
+        get('maxradius').oninput = redraw;
+        get('numcircles').oninput = redraw;
+        
+        //start
+        drawTheCircles();
+        
+        
+        function redraw(e) {
+            opacity = get('opacity').value / 100;
+            get('opacityreadout').textContent = get('opacity').value;
+            
+            maxRadius = get('maxradius').value;
+            get('maxradiusreadout').textContent = maxRadius;
+            
+            numCircles = get('numcircles').value;
+            get('numcirclesreadout').textContent = numCircles;
+            drawTheCircles();
+        }
+        
+        function drawTheCircles() {
+            var temp = ""
+            for(var i = 0; i < numCircles; i++) {
+                temp += drawOneCircle();
+            }
+            get('circles').innerHTML = temp;
+        }
+        
+        function drawOneCircle() {
+            var x = Math.random() * 600;
+            var y = Math.random() * 400;
+            var radius = Math.random() * maxRadius;
+            var color = randomHexColor();
+            //let opacity = Math.random();
+            
+            return "<circle cx='" + x + "' cy='" + y + "' r= '" + radius + "' fill='" + color + "' fill-opacity='" + opacity + "' />"
+        }
+        
+        function randomHexColor() {
+            return "#" +
+                randomHexDigit() + randomHexDigit() +
+                randomHexDigit() + randomHexDigit() +
+                randomHexDigit() + randomHexDigit();
+        }
+        
+        function randomHexDigit() {
+            var digits = "0123456789abcdef";
+            return digits[Math.floor(digits.length*Math.random())];
+        }
+        
+    </script>
+</body>
+</html>

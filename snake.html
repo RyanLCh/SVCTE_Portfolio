@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        2 November 2020
+        Snake Game
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Snake</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: lavenderblush;
+        }
+        
+        p#controls button {
+            width: 48px; height: 48px;
+            background-color: purple;
+            color: lavenderblush;
+            font-size: 24px;
+            border: none;
+            border-radius: 5px;
+            margin: 4px;
+        }
+        
+        p#controls span {
+            margin-left: 24px;
+        }      
+
+    </style>
+    <script type='text/javascript' src='navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Snake</h1>
+    <!-- page content will go here -->
+    <svg width='400' height='400' viewBox='0 0 400 400'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+        
+        <!-- the clipping paths and masks will go here -->
+        
+        <defs>
+        </defs>
+        
+        <!-- the shapes and stuff will go here -->
+        
+        <rect x='0' y='0' width='400' height='400' fill='lavenderblush' />
+        
+        <g id='game'>
+        </g>
+        
+    </svg>
+    
+    <p id='controls'>
+        <button id='slower'>&ndash;</button>
+        <button id='faster'>+</button>
+        <span id='count'>5</span>
+    </p>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Remake the popular snake game.
+        </p>
+        <p>
+            <b>Problem:</b> It’s simple and there’s no difference from the original game.
+        </p>
+        <p>
+            <b>Solution:</b> Added buttons to slow or quicken the snake and text to display their score.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='index.html' id='back'>
+            <img src='naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='index.html'>
+            <img src='naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='index.html' id='next'>
+            <img src='naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        var size = 20;
+        var numRows = 20;
+        var numColumns = 20;
+        var gridColor = 'gray';
+        var snakeColor = 'purple';
+        var foodColor = 'green';
+        var direction = 'right';
+        var timeout = 500;
+        
+        var snake = [ [ 10, 5 ], [ 9, 5], [ 8, 5 ], [ 7, 5], [ 6, 5 ] ];
+        var food = [ 15, 15];
+        
+        window.onkeydown = keyPressed;
+        get('faster').onclick = get('slower').onclick = changeSpeed;
+        
+        drawGrid();
+        drawSnake(snakeColor);
+        drawFood();
+                
+        moveSnake();
+        
+        function changeSpeed(e) {
+            if(e.currentTarget.id == 'slower') {
+                timeout *= 1.4;
+            }
+            else if (e.currentTarget.id == 'faster') {
+                timeout /= 1.4;
+            }
+        }
+        
+        function keyPressed(e) {
+            if(e.key == 'ArrowDown' && direction != 'up') {
+                direction = 'down';
+            }
+            else if(e.key == 'ArrowUp' && direction != 'down') {
+                direction = 'up';
+            }
+            else if(e.key == 'ArrowLeft' && direction != 'right') {
+                direction = 'left';
+            }
+            else if(e.key == 'ArrowRight' && direction != 'left') {
+                direction = 'right'
+            }
+            else {
+                
+            }
+        }
+        
+        function moveSnake() {
+            // 1. add a new head in correct direction
+            var newHead = [-1, -1];
+            if(direction == 'right') {
+                newHead[0] = snake[0][0] + 1;
+                newHead[1] = snake[0][1];
+                newHead[0] = newHead[0] % numColumns;
+            }
+            else if(direction == 'left') {
+                newHead[0] = snake[0][0] - 1;
+                newHead[1] = snake[0][1];
+                newHead[0] = (newHead[0] + numColumns) % numColumns;
+            }
+            else if(direction == 'down') {
+                newHead[0] = snake[0][0];
+                newHead[1] = snake[0][1] + 1;
+                newHead[1] = newHead[1] % numRows;
+            }
+            else if(direction == 'up') {
+                newHead[0] = snake[0][0];
+                newHead[1] = snake[0][1] - 1;
+                newHead[1] = (newHead[1] + numRows) % numRows;
+            }
+            snake.unshift(newHead);
+            drawSnake(gridColor)
+
+            // 2. remove the tail and check for eating food
+            if(newHead[0] == food[0] && newHead[1] == food [1]) {
+                do {
+                    moveTheFood();
+                } while(positionInSnake(food) > -1)
+            }
+            else {
+                snake.pop();
+            }
+            
+            // 3. check for intersecting snake itself/tail
+            var bite = positionInSnake(newHead)
+            if(bite > -1) {
+                // a. remove the tail
+                snake.splice(bite);
+            }
+            
+            drawSnake(snakeColor);
+            get('count').textContent = snake.length;
+
+            setTimeout(moveSnake, timeout);
+        }
+        
+        function positionInSnake(cell) {
+            for(var i = 1; i < snake.length; i++) {
+                if(snake[i][0] == cell[0] && 
+                   snake[i][1] == cell[1]) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
+        function moveTheFood() {
+            food[0] = Math.floor(Math.random() * numColumns);
+            food[1] = Math.floor(Math.random() * numRows);
+            drawFood();
+        }
+        
+        function drawSnake(color) {
+            for(var i = 0; i < snake.length; i++) {
+                var x = snake[i][0];
+                var y = snake[i][1];
+                get('r' + y + 'c' + x).setAttribute('fill', color);
+            }
+        }
+        
+        function drawFood() {
+            var x = food[0];
+            var y = food[1];
+            
+            get('r' + y + 'c' + x).setAttribute('fill', foodColor);
+        }
+        
+        function drawGrid() {
+            var temp = "";
+            for(var y = 0; y < numRows; y++) {
+                for(var x = 0; x < numColumns; x++) {
+                    var tile = "<rect x='" + (x*size) + "' y='" + (y*size) + "' width='" + (size-1) + "' height='" + (size-1) + "' fill='" + gridColor + "' id='r" + y + "c" + x + "' />";
+                    
+                    temp += tile;
+                }
+                get('game').innerHTML = temp;
+            }
+        }
+
+    </script>
+</body>
+</html>

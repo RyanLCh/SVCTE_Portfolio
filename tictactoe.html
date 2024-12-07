@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <!--
+        Ryan La
+        14 October 2020
+        Tic Tac Toe
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Tic Tac Toe</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: #214;
+            color: aliceblue;
+        }
+        div#board div.row button {
+            width: 72px;
+            height: 72px;
+            margin: 6px 4px;
+            background-color: azure;
+            border: none;
+            box-shadow: 1px 1px 3px gray;
+            font-size: 36px;
+            color: #214;
+        }
+        button#restart {
+            height: 42px;
+            padding: 6px 18px;
+            margin-top: 0.5em;
+            background-color: azure;
+            border: none;
+            background: linear-gradient(aliceblue, #c0c8cf);
+            color: #214;
+        }
+        nav img {
+            background-color: azure;
+        }
+        footer {
+            color: #c0c8cf
+        }
+        
+        button:active { color: black; }
+        button#restart:active { 
+            background: linear-gradient(#e0e8ef, #b0b8bf);
+        }
+
+    </style>
+    <script type='text/javascript' src='navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Tic Tac Toe</h1>
+    <!-- page content will go here -->
+    
+    <p id='message'>Player X starts</p>
+    
+    <div id='board'>
+        <div class='row'>
+            <button id='tile1'>&nbsp;</button>
+            <button id='tile2'>&nbsp;</button>
+            <button id='tile3'>&nbsp;</button>
+        </div>
+        <div class='row'>
+            <button id='tile4'>&nbsp;</button>
+            <button id='tile5'>&nbsp;</button>
+            <button id='tile6'>&nbsp;</button>
+        </div>
+        <div class='row'>
+            <button id='tile7'>&nbsp;</button>
+            <button id='tile8'>&nbsp;</button>
+            <button id='tile9'>&nbsp;</button>
+        </div>
+    </div>
+    
+    <p><button id='restart'>New Game</button></p>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Recreate Tic Tac Toe game on a website.
+        </p>
+        <p>
+            <b>Problem:</b> You had to refresh the page for a new game, and players might lose track of turns.
+        </p>
+        <p>
+            <b>Solution:</b> Added a new game button to clear the game and text to inform players whose turn it is and who wins.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='index.html' id='back'>
+            <img src='naviconsai/navicons_purple-arrow-left.png' alt='back' />
+        </a>
+        <a href='index.html'>
+            <img src='naviconsai/navicons_purple-waffle.png' alt='home' />
+        </a>
+        <a href='index.html' id='next'>
+            <img src='naviconsai/navicons_purple-arrow-right.png' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        // to do:
+        // 1. make the board (9)
+        // 2. put letters on the board (X, O)
+        // 3. figure out a win
+        // 4. display status if someone won
+        // 5. new game
+        // 6. display status whose turn it is
+        // 7. draw?
+        
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        // global variables
+        var player = 'X';
+        var possibleWins = [
+            [1, 2, 3], 
+            [4, 5, 6], 
+            [7, 8, 9], 
+            [1, 4, 7], 
+            [2, 5, 8], 
+            [3, 6, 9],
+            [1, 5, 9], 
+            [3, 5, 7]
+        ];
+        var gameEnded = false;
+        
+        // start up
+        setBoard();
+        get('restart').onclick = restart;
+        
+        function restart(e) {
+            var board = get('board');
+            var buttons = board.getElementsByTagName('button');
+            for(var i = 0; i < buttons.length; i++) {
+                buttons[i].innerHTML = '&nbsp;';
+            }
+            gameEnded = false;
+            showMessage('Player ' + player + ' starts');
+        }
+        
+        function setBoard() {
+            var board = get('board');
+            var buttons = board.getElementsByTagName('button');
+            for(var i = 0; i < buttons.length; i++) {
+                buttons[i].onclick = buttonClicked;
+            }
+        }
+        
+        function buttonClicked(e) {
+            //alert(e.currentTarget.id);
+            if(e.currentTarget.textContent == 'X' ||
+               e.currentTarget.textContent == 'O' ) {
+                return;
+            }
+            if(gameEnded) { return; }
+            e.currentTarget.textContent = player;
+            gameEnded = checkForWin();
+            if(gameEnded) {
+                showMessage('Player ' + player + ' won!');
+            }
+            else {
+                gameEnded = checkTie();
+            }
+            switchPlayer();
+        }
+        
+        function checkForWin() {
+            for(var i = 0; i < possibleWins.length; i++) {
+                if(checkPossibleWin(i)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        function checkPossibleWin(n) {
+            for(var i = 0; i < possibleWins[n].length; i++) {
+                var id = 'tile' + possibleWins[n][i];
+                if(get(id).textContent != player) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        
+        function checkTie() {
+            var board = get('board');
+            var buttons = board.getElementsByTagName('button');
+            for(var i = 0; i < buttons.length; i++) {
+                if(buttons[i].textContent != 'X' && 
+                   buttons[i].textContent != 'O') {
+                    return false;
+                }
+            }
+            showMessage('Game ended in a draw.');
+            return true;
+        }
+        
+        function switchPlayer() {
+            if (player == 'X') { 
+                player = 'O';
+            }
+            else { 
+                player = 'X'; 
+            }
+            if(!gameEnded) {
+                showMessage('Player ' + player + '\'s turn');
+            }
+        }
+        
+        function showMessage(message) {
+            get('message').textContent = message;
+        }
+
+    </script>
+</body>
+</html>

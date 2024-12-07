@@ -1,0 +1,80 @@
+<svg width='600' height='600' viewBox='0 0 600 600'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+    <!-- Ryan La, Mobile App Design PM, 23 September 2020 -->
+    
+    <!-- the clipping paths and masks will go here -->
+
+    <defs>
+        <clipPath id='notch'>
+            <polygon points='0 0 600 0 300 300 
+                             600 300 600 600 0 600 z' />
+        </clipPath>
+        
+        <mask id='inner'>
+            <rect x='0' y='0' width='600' height='600' fill='white' />
+            <circle cx='300' cy='300' r='120' fill='black' />
+        </mask>
+        
+        <clipPath id='crossbar'>
+            <circle cx='300' cy='300' r='200' />
+        </clipPath>
+        
+        <clipPath id='lower'>
+            <polygon points='0 120 630 600 0 600 z' />
+        </clipPath>
+        
+        <clipPath id='upper'>
+            <polygon points='0 480 630 0 0 0 z' />
+        </clipPath>
+        
+        <clipPath id='bottom'>
+            <rect x='0' y='300' width='600' height='300' />
+        </clipPath>
+    </defs>
+
+    <!-- the shapes and stuff will go here -->
+
+    <rect x='0' y='0' width='600' height='600' fill='#214' />
+    
+    <!--<g transform='scale(1.5 1.5) translate(-100 -100)'>-->
+    <circle cx='300' cy='300' r='200' fill='#db3236' 
+            clip-path="url(#notch)"
+            mask='url(#inner)'/>
+    
+    <g clip-path='url(#bottom)'>
+        <circle cx='300' cy='300' r='200' fill='#4885ed'
+            clip-path="url(#notch)"
+            mask='url(#inner)' />
+    </g>
+        
+    <g clip-path='url(#lower)' >
+    <circle cx='300' cy='300' r='200' fill='#3cba54'
+        clip-path="url(#notch)"
+        mask='url(#inner)' />
+    </g>
+    
+    <g clip-path='url(#lower)' >
+    <g clip-path='url(#upper)' >
+    <circle cx='300' cy='300' r='200' fill='#F4c20d' 
+            clip-path="url(#notch)"
+            mask='url(#inner)'/>
+    </g>
+    </g>
+    
+    <rect x='300' y='260' width='300' height='80' 
+          fill='#4885ed' clip-path='url(#crossbar)' />
+    <!--</g>-->
+    <!--
+    <polygon points='0 120 630 600 0 600 z' fill='none' stroke='purple' />
+    <polygon points='0 480 630 0 0 0 z' fill='none' stroke='purple' />
+    -->
+    
+    <!--
+    <circle cx='300' cy='300' r='120' fill='none' stroke='purple' />
+    
+    <polygon points='0 0 600 0 300 300 600 300 600 600 0 600 z' 
+             stroke='red' fill='none'/> -->
+
+</svg>

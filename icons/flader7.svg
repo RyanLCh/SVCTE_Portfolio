@@ -1,0 +1,38 @@
+<svg width='600' height='600' viewBox='0 0 600 600'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+    <!-- Ryan La, Mobile App Design PM, 10/5/2020 -->
+    
+    <!-- the clipping paths and masks will go here -->
+
+    <defs>
+        <clipPath id='c'>
+            <circle cx='300' cy='300' r='200' />
+        </clipPath>
+    </defs>
+
+    <!-- the shapes and stuff will go here -->
+
+    <rect x='0' y='0' width='600' height='600' fill='#ecc' />
+
+    <circle cx='300' cy='300' r='270' fill='#013'/>
+    
+    <circle cx='300' cy='300' r='245' fill='white'/>
+    
+    <polygon points='390 280 600 447
+                     600 600 390 600 z'
+             fill='#013'
+             id='first' 
+             clip-path="url(#c)"/>
+    
+    <use xlink:href='#first' transform='rotate(51.43 300 300)' />
+    <use xlink:href='#first' transform='rotate(102.86 300 300)' />
+    <use xlink:href='#first' transform='rotate(154.29 300 300)' />
+    <use xlink:href='#first' transform='rotate(-154.29 300 300)' />
+    <use xlink:href='#first' transform='rotate(-102.86 300 300)' />
+    <use xlink:href='#first' transform='rotate(-51.43 300 300)' />
+    
+    <circle cx='300' cy='300' r='60' fill='#013'/>
+    
+</svg>

@@ -1,0 +1,9 @@
+<svg width='48' height='48' viewBox='0 0 48 48'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+    <!-- Ryan La, PM, 8 September 2020 -->
+
+    <polygon points='0 14 0 34 18 34 18 48 48 24 18 0 18 14 z' fill='powderblue' transform='rotate(180 24 24)'/>
+
+</svg>

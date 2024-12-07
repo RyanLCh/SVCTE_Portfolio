@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        26 October 2020
+        Basketball
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Basketball</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "../portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: #345;
+            color: #cdf;
+        }
+        h1 {
+            font-weight: normal;
+        }
+        
+        div#controls { 
+            margin: 1em 0;
+        }
+        div#controls button {
+            width: 48px;
+            height: 48px;
+            background-color: black;
+            color: white;
+            font-size: 24px;
+            border: none;
+            border-radius: 17%;
+        }
+        footer {
+            color: #89b;
+        }
+
+    </style>
+    <script type='text/javascript' src='../navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Basketball</h1>
+    <!-- page content will go here -->
+    
+    <div id='controls'>
+        <button id='black'>&nbsp;</button>
+        <button id='brown'>&nbsp;</button>
+        <button id='orange'>&nbsp;</button>
+        <button id='forestgreen'>&nbsp;</button>
+        <button id='cornflowerblue'>&nbsp;</button>
+        <button id='indigo'>&nbsp;</button>
+        <button id='hotpink'>&nbsp;</button>
+        <button id='slower'>&ndash;</button>
+        <button id='faster'>+</button>
+    </div>
+    
+    <svg width='800' height='600' viewBox='0 0 800 600'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+        <!-- the clipping paths and masks will go here -->
+
+        <defs>
+            <clipPath id='circle'>
+                <circle cx='100' cy='100' r='50'/>
+            </clipPath>
+            <radialGradient id='grad' cx='30%' cy='30%' r='70%'>
+                <stop offset='0' stop-color='#fd0' />
+                <stop offset='1' stop-color='#c60' />
+            </radialGradient>
+            <radialGradient id='shine' cx='30%' cy='30%' r='70%'>
+                <stop offset='0' stop-color='#ddd' stop-opacity='0.8'/>
+                <stop offset='0.75' stop-color='white' stop-opacity='0' />
+                <stop offset='0.75' stop-color='black' stop-opacity='0' />
+                <stop offset='1' stop-color='black' stop-opacity='0.25' />
+            </radialGradient>
+            
+        </defs>
+
+        <!-- the shapes and stuff will go here -->
+
+        <rect x='0' y='0' width='800' height='600' fill='#cdf' />
+        
+        
+        <circle cx='100' cy='100' r='50' fill='url(#grad)' id='ball' />
+
+        <g clip-path='url(#circle)' stroke='black' stroke-width='2' id='lines'>
+            <circle cx='25' cy='100' r='50' fill='none'/>
+            <circle cx='175' cy='100' r='50' fill='none'/>
+            <polyline points='100 0 100 200'/>
+            <polyline points='0 100 200 100'/>
+        </g>
+        
+        <circle cx='100' cy='100' r='50' fill='url(#shine)' id='top' />
+
+    </svg>
+    
+    <p>Click or drag the mouse to change the direction.</p>
+    <p>Click the + or - to make it go faster or slower.</p>
+    <p>This works best on computer or iPad in landscape mode.</p>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Make a basketball that bounces around the screen using SVG and JavaScript.
+        </p>
+        <p>
+            <b>Problem:</b> It was uninteractive to just watch a basketball move.
+        </p>
+        <p>
+            <b>Solution:</b> Added user input to control the basketball’s direction, color, and speed.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='../index.html' id='back'>
+            <img src='../naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='../index.html'>
+            <img src='../naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='../index.html' id='next'>
+            <img src='../naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        // utility functions
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        // global variables
+        var current = { x: 0, y: 0 }; // current transform
+        var delta = { x: 6, y: 4 };   // vector = direction
+        var currentRotation = 0;
+        var deltaRotation = -4;
+        var mouseIsDown = false;
+        var darkColors = [ 'black', 'brown', 'indigo' ];
+        
+        // start
+        colorTheSwatches();
+        get('faster').onclick = goFaster;
+        get('slower').onclick = goSlower;
+        setInterval(moveTheBall, 20); // 100 msec = 10x per second
+        document.getElementsByTagName('svg')[0].onclick = changeDirection;
+        document.getElementsByTagName('svg')[0].onmousemove = changeDirection;
+        document.getElementsByTagName('body')[0].onmousedown = mouseDown;
+        document.getElementsByTagName('body')[0].onmouseup = mouseUp;
+        
+        //-----------------------------------------
+        
+        function mouseDown() {
+            mouseIsDown = true;
+        }
+        function mouseUp() {
+            mouseIsDown = false;
+        }
+        
+        function changeDirection(e) {
+            if(!mouseIsDown && e.type != 'click') {
+                return;
+            }
+            
+            var x = e.offsetX;
+            var y = e.offsetY;
+            
+            var newVector = { 
+                x: x - current.x - 100, 
+                y: y - current.y - 100
+            };
+                
+            var newMagnitude = Math.sqrt(
+                newVector.x*newVector.x + newVector.y*newVector.y);
+            var oldMagnitude = Math.sqrt(
+                delta.x*delta.x + delta.y*delta.y);
+            var scaleFactor = oldMagnitude / newMagnitude;
+            
+            delta.x = (x - current.x - 100) * scaleFactor;
+            delta.y = (y - current.y - 100) * scaleFactor;
+        }
+        
+        function goFaster() {
+            delta.x *= 1.414;
+            delta.y *= 1.414;
+            deltaRotation *= 1.414;
+        }
+        function goSlower() {
+            delta.x /= 1.414;
+            delta.y /= 1.414;
+            deltaRotation /= 1.414;
+        }
+        
+        function colorTheSwatches() {
+            var buttons = get('controls').getElementsByTagName('button');
+            for(var i = 0; i < buttons.length; i++) {
+                if(buttons[i].id == 'faster' || 
+                   buttons[i].id == 'slower') {
+                    return;
+                }
+                else {
+                    buttons[i].style.backgroundColor = buttons[i].id;
+                    buttons[i].onclick = colorTheBall;
+                }
+            }
+        }
+        
+        function colorTheBall(e) {
+            var color = e.currentTarget.id;
+            get('ball').setAttribute('fill', color);
+            
+            if(darkColors.indexOf(color) > -1) {
+                get('lines').setAttribute('stroke', 'white');
+            }
+            else {
+                get('lines').setAttribute('stroke', 'black');
+            }
+        }
+        
+        function moveTheBall() {
+            
+            current.x += delta.x;
+            current.y += delta.y;
+            currentRotation += deltaRotation;
+            
+            get('ball').setAttribute('transform', 'translate(' + current.x + ' ' + current.y + ' )');
+            
+            get('top').setAttribute('transform', 'translate(' + current.x + ' ' + current.y + ' )');
+            
+            get('lines').setAttribute('transform', 'translate(' + current.x + ' ' + current.y + ') rotate(' + currentRotation + ' 100 100)');
+            
+            // bounce off the walls
+            if (current.x > 650) {
+                delta.x *= -1;
+                deltaRotation = 
+                    -Math.sign(delta.y) * Math.abs(deltaRotation);
+            }
+            if (current.y > 450) {
+                delta.y *= -1;
+                deltaRotation = 
+                    Math.sign(delta.x) * Math.abs(deltaRotation);
+            }
+            if(current.x < -50) {
+                delta.x *= -1;
+                deltaRotation = 
+                    Math.sign(delta.y) * Math.abs(deltaRotation);
+            }
+            if(current.y < -50) {
+                delta.y *= -1;
+                deltaRotation = 
+                    -Math.sign(delta.x) * Math.abs(deltaRotation);
+            }
+        }
+
+    </script>
+</body>
+</html>

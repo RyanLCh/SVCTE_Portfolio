@@ -1,0 +1,56 @@
+<svg width='600' height='600' viewBox='0 0 600 600'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+    <!-- Ryan La, Mobile App Design PM, 10/5/2020 -->
+    
+    <!-- the clipping paths and masks will go here -->
+
+    <defs>
+        <linearGradient x1='0' y1='0' x2='0' y2='1'
+                        id='bg'>
+            <stop offset='0' stop-color='#EA895C' />
+            <stop offset='0.5' stop-color='#F75D56' />
+            <stop offset='1' stop-color='#F23D5E' />
+        </linearGradient>
+        <mask id='m1'>
+            <rect x='0' y='0' width='600' height='600'
+                  fill='white' />
+            <rect x='150' y='150' width='300' height='300'
+                  rx='50' ry='50'
+                  transform='translate(-30 -30)'
+                  fill='black' />
+            <!-- 
+          transform='translate(0 200) scale(1 0.5) rotate(45 300 300)' /> -->
+        </mask>
+        <mask id='m2'>
+            <rect x='0' y='0' width='600' height='600'
+                  fill='white' />
+            <rect x='285' y='180' width='30' height='150'
+                  rx='15' ry='9'
+                  fill='black' />
+            <ellipse cx='170' cy='330' rx='25' ry='15'
+                     fill='black'/>
+        </mask>
+    </defs>
+
+    <!-- the shapes and stuff will go here -->
+
+    <rect x='0' y='0' width='600' height='600' fill='url(#bg)' />
+    
+    <rect x='150' y='150' width='300' height='300'
+          rx='50' ry='50'
+          transform='translate(0 230) scale(1 0.5) rotate(45 300 300)'
+          fill='white'
+          mask='url(#m1)'/>
+    
+    <g mask='url(#m2)'>
+    <rect x='150' y='150' width='300' height='300'
+          rx='50' ry='50'
+          transform='translate(0 180) scale(1 0.5) rotate(45 300 300)'
+          fill='white'/>
+    </g>
+    
+    <circle cx='300' cy='180' r='40' fill='white' />
+    
+</svg>

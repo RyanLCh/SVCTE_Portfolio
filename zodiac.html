@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        12 October 2020
+        Chinese Zodiac
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Chinese Zodiac</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background: #fdd;
+        }
+        h1 {
+            font-family: fantasy;
+            color: #a00;
+        }
+        table {
+            width: 90%;
+            margin: 1em auto;
+            border-collapse: collapse;
+            background: #fee;
+            max-width: 800px;
+            font-size: 0.9em;
+        }
+        table th {
+            background: #400;
+            color: #fee;
+        }
+        table th, table td {
+            border: 1px solid #c00;
+            padding: 6px 0;
+            width: 8.33%
+        }
+        form {
+            width: 90%;
+            margin: 1em auto;
+            background-color: #fee;
+            padding: 0.5em 0;
+            border: 1px solid #400;
+            max-width: 800px;
+        }
+        
+        input#birthyear { width: 4em; }
+        
+        span#answer {
+            width: 16em;
+            display: inline-block;
+            text-align: left;
+            margin-left: 2em;
+        }
+        
+        footer {
+            color: #622;
+        }
+
+    </style>
+    <script type='text/javascript' src='navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Chinese Zodiac</h1>
+    <!-- page content will go here -->
+    
+    <form id='lookup'>
+        <label>Birth year: </label>
+        <input type='text' id='birthyear' />
+        <input type='submit' value='Lookup' />
+        <span id='answer'>&nbsp;</span>
+    </form>
+    
+    <table id='years'>
+    </table>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Show someone their zodiac animal in response to their birth year.
+        </p>
+        <p>
+            <b>Problem:</b> There’s too many possible years to fit in a nice-looking table.
+        </p>
+        <p>
+            <b>Solution:</b> The table includes only recent years, and there is a user-input field to systematically lookup their zodiac animal for their birth year.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='index.html' id='back'>
+            <img src='naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='index.html'>
+            <img src='naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='index.html' id='next'>
+            <img src='naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        var animals = [
+            "Rat", "Ox", "Tiger", "Rabbit", 
+            "Dragon", "Snake", "Horse", "Goat", 
+            "Monkey", "Rooster", "Dog", "Pig"
+        ];
+        
+        addAnimals(animals);
+        addYears(1948, 2031);
+        
+        document.getElementById('lookup').onsubmit = doLookup;
+        
+        function doLookup(e) {
+            var year = document.getElementById('birthyear').value;
+            year = parseInt(year);
+            var index = (year+8) % 12;
+            var animal = animals[index];
+            document.getElementById('answer').textContent = year + " is the year of the " + animal + ".";
+            return false;
+        }
+        
+        function addAnimals(animals) {
+            var info = '<tr>';
+            for (var i = 0; i < animals.length; i++) {
+                info += '<th>' + animals[i] + '</th>';
+            }
+            info += '</tr>\n';
+            document.getElementById('years').innerHTML += info;
+        }
+        
+        function addYears(first, last) {
+            var info = "";
+            var numRows = (last-first+1)/12;
+            for(var row = 0; row < numRows; row ++) {
+                info += '<tr>';
+                for(var col = 0; col < 12; col++) {
+                    info += '<td>';
+                    info += first + row*12 + col;
+                    info += '</td>';
+                }
+                info += '</tr>\n';
+            }
+            document.getElementById('years').innerHTML += info;
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        13 October 2020
+        BMI Calculator
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>BMI Calculator</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: lavender;
+        }
+        div#calculator, div#results, div#casestudy {
+            width: 400px;
+            background-color: #def;
+            padding: 2em;
+            border-radius: 30px;
+            margin: 1em auto;
+            box-shadow: 1px 1px 3px gray;
+        }
+        
+        label {
+            width: 18%;
+            display: inline-block;
+            text-align: right;
+            margin-right: 4px;
+        }
+        
+        footer {
+            color: #234;
+        }
+
+    </style>
+    <script type='text/javascript' src='navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>BMI Calculator</h1>
+    <!-- page content will go here -->
+    
+    <div id='calculator'>
+        <p>
+            <label>Pounds: </label>
+            <input type='text' id='pounds' />
+        </p>
+        <p>
+            <label>Feet: </label>
+            <input type='text' id='feet' />
+        </p>
+        <p>
+            <label>Inches: </label>
+            <input type='text' id='inches' />
+        </p>
+        <p>
+            <button id='doit'>Calculate</button>
+        </p>
+    </div>
+    
+    <div id='results'>
+        <p id='bmi'>&nbsp;</p>
+        <p id='range'>&nbsp;</p>
+        <p id='change'>&nbsp;</p>
+    </div>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Make a BMI Calculator for people to enter their height and weight and measure their health.
+        </p>
+        <p>
+            <b>Problem:</b> People may be unhealthy and not understand what their BMI number means.
+        </p>
+        <p>
+            <b>Solution:</b> The calculator explains their number by telling them what health category they are in and how many pounds to gain/lose to be healthy.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='index.html' id='back'>
+            <img src='naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='index.html'>
+            <img src='naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='index.html' id='next'>
+            <img src='naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        get('doit').onclick = doBMI;
+        
+        function checkError(number, id) {
+            if(isNaN(number)) {
+                get(id).style.border = '1px solid red';
+                return true;
+            }
+            else {
+                get(id).style.border = 'none';
+                return false;
+            }
+        }
+        
+        function doBMI(e) {
+            var pounds = parseFloat(get('pounds').value);
+            var feet = parseInt(get('feet').value);
+            var inches = parseFloat(get('inches').value);
+            
+            if(checkError(pounds, 'pounds') || 
+               checkError(feet, 'feet') || 
+               checkError(inches, 'inches'))
+                {
+                    get('bmi').textContent = 'Pounds, feet, and inches must be numbers';
+                }
+            else {
+
+                inches += 12*feet;
+                var bmi = (pounds * 703) / (inches * inches);
+                bmi = bmi.toFixed(2)
+
+                get('bmi').textContent = "Your BMI is " + bmi + ".";
+
+                // BMI ranges:
+                // underweight: < 18.5
+                // normal: 18.5 - 25
+                // overweight: 25 - 30
+                // obese: > 30
+
+                var range = "";
+                if(bmi < 18.5) { range = 'underweight'; }
+                else if(bmi < 25) { range = 'normal'; }
+                else if(bmi < 30) { range = 'overweight'; }
+                else { range = 'very overweight'; }
+
+                get('range').textContent = 'Your BMI is in the ' + range + ' range.';
+                
+                changeWeight(bmi, inches);
+            }
+        }
+        
+        function changeWeight(bmi, inches) {
+            if(bmi < 18.5) {
+                var diff = 18.5 - bmi;
+                diff *= (inches * inches) / 703;
+                get('change').textContent = 'You need to gain ' + diff.toFixed(2) + ' more pounds to be in the normal range.';
+            }
+            else if(bmi < 25) {
+                get('change').textContent = 'Good Job!';
+            }
+            else {
+                var diff = bmi - 24.95;
+                diff *= (inches * inches) / 703;
+                get('change').textContent = 'You need to lose ' + diff.toFixed(2) + ' pounds to be in the normal range.';
+            }
+        }
+        
+
+    </script>
+</body>
+</html>

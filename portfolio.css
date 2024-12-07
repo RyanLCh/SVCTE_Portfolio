@@ -1,0 +1,38 @@
+
+/* portfolio.css */
+
+footer {
+    text-align: center;
+    margin: 2em 0;
+    font-size: 0.8em;
+}
+
+/* navigation arrows */
+
+nav {
+    clear: both;
+    margin: 2em 0;
+    text-align: center;
+}
+
+nav img {
+    background-color: #0007;
+    width: 24px;
+    padding: 12px;
+    margin: 4px;
+    border-radius: 4px;
+}
+
+nav a {
+    display: inline-block;
+    text-decoration: none;
+}
+
+/* case studies */
+
+div#casestudy {
+    width: 500px;
+    text-align: left;
+    margin: 2em auto;
+    line-height: 1.4em;
+}

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        19 October 2020
+        Resistor Color Code
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Resistor Color Code</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: aliceblue;
+        }
+        
+        div#resistor {
+            width: 250px;
+            margin: 1em auto;
+        }
+        div#resistor div {
+            display: inline-block;
+            background-color: tan;
+            margin: 0 -2.6px;
+            height: 60px;
+            width: 12.5%;
+        }
+        
+        div#buttons {
+            width: 250px;
+            margin: 1em auto;
+        }
+        div#buttons button {
+            width: 72px; height: 72px;
+            background-color: pink;
+            margin: 4px 2px;
+            border: none;
+            font-size: 36px;
+            box-shadow: 1px 1px 3px gray;
+            color: white;
+        }
+        footer {
+            color: #444;
+        }
+        
+        @media screen and (max-width: 750px) and (max-height: 500px) {
+            div#buttons {
+                width: 500px;
+            }
+        }
+        @media screen and (max-width: 600px) and (max-height: 350px) {
+            div#buttons {
+                width: 450px;
+            }
+            div#buttons button {
+                width: 60px;
+                height: 60px;
+            }
+        }
+        @media screen and (min-width: 760px) and (min-height: 1000px) {
+            h1 {
+                margin-top: 72px;
+                font-size: 2em;
+            }
+            div#resistor {
+                width: 400px;
+                margin: 8px auto;
+            }
+            div#result {
+                font-size: 2em;
+                margin-top: 20px;
+            }
+            div#buttons {
+                width: 400px;
+            }
+            div#buttons button {
+                width: 96px;
+                height: 96px;
+                margin: 8px 6px;
+            }
+        }
+    </style>
+    <script type='text/javascript' src='navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Resistor Color Code</h1>
+    <!-- page content will go here -->
+    
+    <div id='resistor'>
+        <div class='bg'>&nbsp;</div>
+        <div id='band1'>&nbsp;</div>
+        <div class='bg'>&nbsp;</div>
+        <div id='band2'>&nbsp;</div>
+        <div class='bg'>&nbsp;</div>
+        <div id='band3'>&nbsp;</div>
+        <div class='bg'>&nbsp;</div>
+        <div class='bg'>&nbsp;</div>
+    </div>
+    
+    <div id='result'>&nbsp;</div>
+    
+    <div id='buttons'>
+        <button id='b0'>&nbsp;</button>
+        <button id='b1'>&nbsp;</button>
+        <button id='b2'>&nbsp;</button>
+        <button id='b3'>&nbsp;</button>
+        <button id='b4'>&nbsp;</button>
+        <button id='b5'>&nbsp;</button>
+        <button id='b6'>&nbsp;</button>
+        <button id='b7'>&nbsp;</button>
+        <button id='b8'>&nbsp;</button>
+        <button id='b9'>&nbsp;</button>
+        <button id='backspace'>&lt;</button>
+        <button id='clear'>X</button>
+    </div>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Create a resistor calculator that displays the resistor’s appearance and the amount of ohms it resists.
+        </p>
+        <p>
+            <b>Problem:</b> It was too big on a phone, and it was inefficient having to clear it.
+        </p>
+        <p>
+            <b>Solution:</b> We made it resize on smaller screens to fit on a phone and automatically reset itself for engineers to easily change the resistor with one hand.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='index.html' id='back'>
+            <img src='naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='index.html'>
+            <img src='naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='index.html' id='next'>
+            <img src='naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        var colors = [
+            'black', 'saddlebrown', 'red', 'orange',
+            '#faef00', 'green', '#06e', '#c0c',
+            'gray', 'white', 'black', 'black'
+        ];
+        
+        var currentBand = 1;
+        var numbers = [ -1, -1, -1 ];
+        
+        colorTheButtons();
+        addButtonHandlers();
+        
+        function addButtonHandlers() {
+            var b = get('buttons').getElementsByTagName('button');
+            for(var i = 0; i < b.length; i++) {
+                b[i].onclick = buttonClicked;
+            }
+        }
+        
+        function buttonClicked(e) {
+            if(e.currentTarget.id == 'backspace') {
+                doBackspace();
+                return;
+            }
+            if(e.currentTarget.id == 'clear') {
+                doClear();
+                return;
+            }
+            if(currentBand == 1) {
+                doClear();
+                /*get('band2').style.backgroundColor = 'tan';
+                get('band3').style.backgroundColor = 'tan';
+                get('result').innerHTML = '&nbsp;';
+                numbers[1] = -1;
+                numbers[2] = -1;*/
+            }
+            var band = 'band' + currentBand;
+            get(band).style.backgroundColor =
+                e.currentTarget.style.backgroundColor;
+            numbers[currentBand-1] = 
+                parseInt(e.currentTarget.id.substr(1));
+            
+            console.log (numbers)
+            currentBand++;
+            if(currentBand > 3) {
+                doCalculation();
+                currentBand = 1;
+            }
+        }
+        
+        function doClear() {
+            for(var i = 0; i < 3; i++) {
+                get('band' + (i + 1)).style.backgroundColor = 'tan';
+                numbers[i] = -1
+            }
+            get('result').innerHTML = '&nbsp;';
+            currentBand = 1;
+        }
+        
+        function doBackspace() {
+            var i = 0;
+            while(numbers[i] != -1 && i < 3) {
+                i++;
+                console.log(i);
+            }
+            get('band' + i).style.backgroundColor = 'tan';
+            numbers[i-1] = -1;
+            currentBand = i;
+            get('result').innerHTML = '&nbsp;';
+        }
+            
+            /*if(currentBand == 1 && numbers[0] == -1) { 
+                return;
+            }
+            else if (currentBand == 2) {
+                doClear();
+            }
+            else if(currentBand == 3) {
+                currentBand = 2;
+                get('band2').style.backgroundColor = 'tan';
+                numbers[1] = -1;
+            }
+            else {
+                currentBand = 3;
+                get('band3').style.backgroundColor = 'tan';
+                numbers[2] = -1
+                get('result').innerHTML = '&nbsp;';
+            }
+        }*/
+        
+        function doCalculation() {
+            var a = numbers[0];
+            var b = numbers[1];
+            var m = numbers[2];
+            var ohms = (10*a + b) * Math.pow(10, m);
+            get('result').innerHTML = kmg(ohms) + ' &Omega;';
+        }
+        
+        function kmg(n) {
+            if(n > 1000000000) {
+                return n / 1000000000 + "G";
+            }
+            else if(n > 1000000) {
+                return n / 1000000 + "M";
+            }
+            else if(n > 1000) {
+                return n / 1000 + "K";
+            }
+            else {
+                return n;
+            }
+        }
+        
+        function colorTheButtons() {
+            var b = get('buttons').getElementsByTagName('button');
+            for(var i = 0; i < b.length; i++) {
+                b[i].style.backgroundColor = colors[i];
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<svg width='200' height='200' viewBox='0 0 200 200'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+    <!-- Ryan La, Mobile App Design PM, date -->
+    
+    <!-- the clipping paths and masks will go here -->
+
+    <defs>
+        <clipPath id='circle'>
+            <circle cx='100' cy='100' r='50'/>
+        </clipPath>
+        <radialGradient id='grad' cx='30%' cy='30%' r='70%'>
+            <stop offset='0' stop-color='#fd0' />
+            <stop offset='1' stop-color='#c60' />
+        </radialGradient>
+    </defs>
+
+    <!-- the shapes and stuff will go here -->
+
+    <rect x='0' y='0' width='200' height='200' fill='#458' />
+    
+    <circle cx='100' cy='100' r='50' fill='url(#grad)' />
+    
+    <g clip-path='url(#circle)' stroke='black'>
+        <circle cx='25' cy='100' r='50' fill='none'/>
+        <circle cx='175' cy='100' r='50' fill='none'/>
+        <polyline points='100 0 100 200'/>
+        <polyline points='0 100 200 100'/>
+    </g>
+
+</svg>

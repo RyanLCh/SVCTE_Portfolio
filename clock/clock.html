@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        29 October 2020
+        Analog Clock
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Analog Clock</title>
+    <style type='text/css'>
+    /* styles go here */
+        @import "../portfolio.css";
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: honeydew;
+        }
+        div#themes { margin: 1em 0; }
+        div#themes div {
+            width: 48px; 
+            height: 48px;
+            display: inline-block;
+            margin: 4px;
+        }
+        div#divider, div#square, div#round {
+            background-color: black;
+        }
+        div#themes div#divider {
+            width: 2px;
+            margin: 0 16px;
+        }
+        div#round {
+            border-radius: 50%;
+        }
+    </style>
+    <script type='text/javascript' src='../navigation.js'>
+    </script>
+</head>
+
+<body>
+    <h1>Analog Clock</h1>
+    <!-- page content will go here -->
+    
+    <svg width='600' height='600' viewBox='0 0 600 600'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+    
+        <!-- the clipping paths and masks will go here -->
+
+        <defs>
+        </defs>
+
+        <!-- the shapes and stuff will go here -->
+
+        <rect x='0' y='0' width='600' height='600' fill='tan' 
+              id='bgrect'/>
+        
+        <g id='quarter'>
+            <g id='five' stroke='black'>
+                <polyline id='large' points='300 50 300 80' stroke-width='6' />
+
+                <polyline id='small' points='300 50 300 65' stroke-width='4' transform='rotate(6 300 300)' />
+                <use xlink:href='#small' transform='rotate(6 300 300)' />
+                <use xlink:href='#small' transform='rotate(12 300 300)' />
+                <use xlink:href='#small' transform='rotate(18 300 300)' />
+            </g>
+
+            <use xlink:href='#five' transform='rotate(30 300 300)' />
+            <use xlink:href='#five' transform='rotate(60 300 300)' />
+        </g>
+        
+        <use xlink:href='#quarter' transform='rotate(90 300 300)' />
+        <use xlink:href='#quarter' transform='rotate(180 300 300)' />
+        <use xlink:href='#quarter' transform='rotate(270 300 300)' />
+        
+        <polyline id='hour' points='300 150 300 350' stroke='black' 
+                  stroke-width='5' transform='rotate(45 300 300)'/>
+        
+        <polyline id='minute' points='300 85 300 350' stroke='black' 
+                  stroke-width='5' transform='rotate(240 300 300)'/>
+        
+        <polyline id='second' points='300 85 300 370' stroke='red' 
+                  stroke-width='5' transform='rotate(150 300 300)'/>
+        
+        <circle cx='300' cy='300' r='12' fill='red' />
+        <circle cx='300' cy='300' r='4' fill='red' stroke='black' 
+                stroke-width='2' />
+    </svg>
+    
+    <div id='themes'>
+        <div id='tan' style='background-color: tan;'>&nbsp;</div>
+        <div id='brown' style='background-color: #642;'>&nbsp;</div>
+        <div id='black' style='background-color: black'>&nbsp;</div>
+        <div id='ltblue' style='background-color: #5af'>&nbsp;</div>
+        <div id='dkblue' style='background-color: #248'>&nbsp;</div>
+        <div id='green' style='background-color: darkgreen'>&nbsp;</div>
+        <div id='pink' style='background-color: pink'>&nbsp;</div>
+        <div id='divider'>&nbsp;</div>
+        <div id='square'>&nbsp;</div>
+        <div id='round'>&nbsp;</div>
+    </div>
+    
+    <div id='casestudy'>
+        <p>
+            <b>Objective:</b> Make an analog clock using SVG to display the time in real life.
+        </p>
+        <p>
+            <b>Problem:</b> It was too simple and common as a clock.
+        </p>
+        <p>
+            <b>Solution:</b> Added custom designs to change the color and shape of the clock and a tick noise to alert the user when a minute has passed.
+        </p>
+    </div>
+    
+    <nav>
+        <a href='../index.html' id='back'>
+            <img src='../naviconsai/white-arrow-left.svg' alt='back' />
+        </a>
+        <a href='../index.html'>
+            <img src='../naviconsai/white-waffle.svg' alt='home' />
+        </a>
+        <a href='../index.html' id='next'>
+            <img src='../naviconsai/white-arrow-right.svg' alt='next' />
+        </a>
+    </nav>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        var themeColors = {
+            'tan' : 'black',
+            'brown' : 'white',
+            'black' : 'pink',
+            "ltblue" : "lemonchiffon",
+            'dkblue' : '#8cf',
+            'green' : 'limegreen',
+            'pink' : 'black'
+        }
+        var tick = new Audio('tick.mp3');
+        var doTick = true;
+        
+        setupClickHandlers();
+        showTheTime();
+        setInterval(showTheTime, 40);
+        
+        function setupClickHandlers() {
+            var themes = get('themes').getElementsByTagName('div');
+            for(var i = 0; i < themes.length; i++) {
+                if(themes[i].id != 'divider' && 
+                   themes[i].id != 'square' &&
+                   themes[i].id != 'round') {
+                    themes[i].onclick = changeColorTheme;
+                }
+            }
+            get('square').onclick = changeShape;
+            get('round').onclick = changeShape;
+        }
+        
+        function changeShape(e) {
+            if(e.currentTarget.id == 'round') {
+                get('bgrect').setAttribute('rx', 300);
+                get('bgrect').setAttribute('ry', 300);
+            }
+            else if(e.currentTarget.id == 'square') {
+                get('bgrect').setAttribute('rx', 0);
+                get('bgrect').setAttribute('ry', 0);
+            }
+        }
+        
+        function changeColorTheme(e) {
+            get('bgrect').setAttribute('fill', e.currentTarget.style.backgroundColor);
+            
+            var handColor = themeColors[e.currentTarget.id];
+            get('minute').setAttribute('stroke', handColor);
+            get('hour').setAttribute('stroke', handColor);
+            get('five').setAttribute('stroke', handColor);
+        }
+        
+        function showTheTime() {
+            var now = new Date();
+            var h = now.getHours();
+            var m = now.getMinutes();
+            var s = now.getSeconds();
+            var msec = now.getMilliseconds();
+            
+            if(s == 0 && doTick) {
+                tick.play();
+                doTick = false;
+            }
+            else if (s == 1) doTick = true;
+            get('hour').setAttribute('transform', 'rotate(' + hoursToDegrees(h + m/60 + s/3600) + ' 300 300)');
+            get('minute').setAttribute('transform', 'rotate(' + minutesToDegrees(m + s/60 + msec/60000) + ' 300 300)');
+            get('second').setAttribute('transform', 'rotate(' + minutesToDegrees(s + msec/1000) + ' 300 300)');
+        }
+        
+        function hoursToDegrees(hours) {
+            // one hour is 30 degrees
+            return hours * 30;
+        }
+        function minutesToDegrees(minutes) {
+            // one minute is 6 degrees
+            return minutes * 6;
+        }
+        
+
+    </script>
+</body>
+</html>

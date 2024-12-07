@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--
+        Ryan La
+        26 October 2020
+        Basketball
+        Mobile App Design PM
+    -->
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width" /> 
+    <title>Basketball</title>
+    <style type='text/css'>
+    /* styles go here */
+        
+        body { 
+            text-align: center;
+            font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+            background-color: #b64;
+        }
+        
+        footer {
+            margin: 2em;
+            font-size: 0.5em;
+            color: #444;
+        }
+
+    </style>
+</head>
+
+<body>
+    <h1>Basketball</h1>
+    <!-- page content will go here -->
+    
+    <svg width='800' height='200' viewBox='0 0 800 200'
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink= "http://www.w3.org/1999/xlink">
+
+        <!-- the clipping paths and masks will go here -->
+
+        <defs>
+            <clipPath id='circle'>
+                <circle cx='100' cy='100' r='50'/>
+            </clipPath>
+            <radialGradient id='grad' cx='30%' cy='30%' r='70%'>
+                <stop offset='0' stop-color='#fd0' />
+                <stop offset='1' stop-color='#c60' />
+            </radialGradient>
+        </defs>
+
+        <!-- the shapes and stuff will go here -->
+
+        <rect x='0' y='0' width='800' height='200' fill='#458' />
+        
+        <circle cx='100' cy='100' r='50' fill='url(#grad)' id='ball'/>
+
+        <g clip-path='url(#circle)' stroke='black' id='lines'>
+            <circle cx='25' cy='100' r='50' fill='none'/>
+            <circle cx='175' cy='100' r='50' fill='none'/>
+            <polyline points='100 0 100 200'/>
+            <polyline points='0 100 200 100'/>
+        </g>
+        
+        <rect x='0' y='150' width='800' height='10' fill='black' />
+
+    </svg>
+    
+    <footer>Copyright &copy; 2020 Ryan La</footer>
+
+    <script type='text/javascript'>
+    // scripts will go here
+        
+        function get(id) {
+            return document.getElementById(id);
+        }
+        
+        var currentX = 0; // the current transform
+        var deltaX = 4;   // the change in X
+        var currentRotation = 0;
+        var deltaRotation = deltaX * 1.15;
+        
+        setInterval(moveTheBall, 20); // 100 msec = 10x per second
+        
+        function moveTheBall() {
+            if(currentX >= 650 || currentX <= -50) { 
+                deltaX *= -1; 
+                deltaRotation *= -1;
+            }
+            currentX += deltaX;
+            currentRotation += deltaRotation;
+            
+            get('ball').setAttribute('transform', 'translate(' + currentX + ')');
+            
+            get('lines').setAttribute('transform', 'translate(' + currentX + ') rotate(' + currentRotation + ' 100 100)');
+        }
+
+    </script>
+</body>
+</html>
